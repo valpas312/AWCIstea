@@ -132,6 +132,32 @@ header {
     height: auto;
 }
 
+.btn{
+    background-color: #D1401B;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.2em;
+    text-decoration: none;
+}
+
+.btn:hover {
+    background-color: #B12D1A;
+}
+
+.btn:focus {
+    outline: none;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}
+
+.btn-contacto{
+    margin: 2em;
+    padding: 1em;
+    text-decoration: none;
+}
+
 footer {
     background-color: #D1401B;
     color: white;
@@ -157,3 +183,27 @@ footer a:hover {
     text-decoration: underline;
 }
 
+.social-media{
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    list-style-type: none;    
+}
+
+/* eliminar el logo en celular y agrandar el nav */
+@media (max-width: 768px) {
+    .logo {
+        display: none;
+    }
+
+    header {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .nav-list {
+        gap: 10px;
+        padding: 2em;
+    }
+    
+}
