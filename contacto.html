@@ -1,14 +1,64 @@
 <!-- Pagina de contacto con formulario falso para mandar mail -->
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sounds like music</title>
     <link rel="stylesheet" href="styles.css" />
     <link rel="shortcut icon" href="assets/logo.png" />
-</head>
-<body>
+  </head>
+  <body>
+    <main>
+      <header class="header">
+        <img src="assets/logo.png" alt="Logo" class="logo" />
+        <nav>
+          <ul class="nav-list">
+            <li class="nav-item"><a href="index.html">Home</a></li>
+          </ul>
+        </nav>
+      </header>
 
-</body>
+      <div class="container">
+        <!-- Formulario de contacto -->
+        <form class="contact-form">
+            <h1>Contacto</h1>
+          <div class="form-group">
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" required />
+          </div>
+          <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required />
+          </div>
+          <div class="form-group">
+            <label for="mensaje">Mensaje:</label>
+            <textarea id="mensaje" name="mensaje" rows="4" required></textarea>
+          </div>
+          <div class="form-group">
+            <button type="submit">Enviar</button>
+          </div>
+          <div class="form-group">
+            <p>Si tienes alguna pregunta, no dudes en contactarnos.</p>
+          </div>
+          <div class="form-group">
+            <p>
+              Recuerda que este formulario es solo un ejemplo y no enviará
+              correos reales.
+            </p>
+          </div>
+        </form>
+      </div>
+      <!-- <footer>
+        <div class="footer-content">
+          <p>&copy; 2025 Sounds Like Music. Todos los derechos reservados.</p>
+          <ul class="social-media">
+            <li><a href="">Facebook</a></li>
+            <li><a href="">Twitter</a></li>
+            <li><a href="">Instagram</a></li>
+          </ul>
+        </div>
+      </footer> -->
+    </main>
+  </body>
 </html>
