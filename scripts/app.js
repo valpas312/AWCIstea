@@ -11,11 +11,14 @@ const baterias = document.getElementById("baterias");
 const teclados = document.getElementById("teclados");
 const bajos = document.getElementById("bajos");
 
+// Función para obtener los datos de Airtable
+// y mostrarlos en la página
+
 const getAirtableData = async () => {
   const response = await fetch(API_URL, {
     method: "GET",
     headers: {
-      "Authorization": `Bearer ${API_TOKEN}`,
+      Authorization: `Bearer ${API_TOKEN}`,
       "Content-Type": "application/json",
     },
   });
@@ -35,26 +38,42 @@ const getAirtableData = async () => {
     const { nombre, descripcion, imagen, precio } = item;
 
     // Crear un elemento para cada producto
-    const productElement = document.createElement("div");
-    productElement.classList.add("product");
+    const instrumento = document.createElement("li");
+    instrumento.classList.add("instrumento-item");
 
     // Agregar contenido al elemento
-    productElement.innerHTML = `
-      <h2>${nombre}</h2>
-      <p>${descripcion}</p>
-      <img src="${imagen}" alt="${nombre}" />
-      <p>Precio: $${precio}</p>
+    instrumento.innerHTML = `
+    <img src="${imagen}" alt="${nombre}" class="instrumento-imagen">
+    <div class="instrumento-info">
+    <h4>${nombre}</h4>
+    <p>${descripcion}</p>
+    <p class="instrumento-precio">$${precio}</p>
+    <button class="btn">Añadir al carrito</button>
     `;
+
+    const button = document.querySelector(".btn");
+
+    //button
+    button.addEventListener("click", () => {
+      // Aquí puedes agregar la lógica para añadir el producto al carrito
+      // Por ejemplo, podrías guardar el producto en el localStorage
+
+      const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+      carrito.push({ nombre, precio });
+      localStorage.setItem("carrito", JSON.stringify(carrito));
+      // Mostrar un mensaje de éxito
+      console.log(`Añadido al carrito:`, nombre, precio, imagen);
+    });
 
     // Agregar el elemento al contenedor correspondiente
     if (nombre.includes("Guitarra")) {
-      guitarras.appendChild(productElement);
-    } else if (nombre.includes("Batería")) {
-      baterias.appendChild(productElement);
+      guitarras.appendChild(instrumento);
+    } else if (nombre.includes("Bateria")) {
+      baterias.appendChild(instrumento);
     } else if (nombre.includes("Teclado")) {
-      teclados.appendChild(productElement);
+      teclados.appendChild(instrumento);
     } else if (nombre.includes("Bajo")) {
-      bajos.appendChild(productElement);
+      bajos.appendChild(instrumento);
     }
   });
 
