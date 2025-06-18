@@ -37,6 +37,8 @@ const getAirtableData = async () => {
   formattedData.forEach((item) => {
     const { nombre, descripcion, imagen, precio } = item;
 
+    let cantidad = 1; // Cantidad por defecto
+
     // Crear un elemento para cada producto
     const instrumento = document.createElement("li");
     instrumento.classList.add("instrumento-item");
@@ -48,22 +50,43 @@ const getAirtableData = async () => {
     <h4>${nombre}</h4>
     <p>${descripcion}</p>
     <p class="instrumento-precio">$${precio}</p>
-    <button class="btn">Añadir al carrito</button>
     `;
 
-    const button = document.querySelector(".btn");
+    // Agregar botón de añadir al carrito
+    const btnAgregar = document.createElement("button");
+    btnAgregar.classList.add("btn", "agregar");
+    btnAgregar.textContent = "Añadir al carrito";
 
-    //button
-    button.addEventListener("click", () => {
-      // Aquí puedes agregar la lógica para añadir el producto al carrito
-      // Por ejemplo, podrías guardar el producto en el localStorage
+    // Evento para añadir al carrito
+    btnAgregar.addEventListener("click", () => {
+      console.log(`Añadir ${cantidad} ${nombre} al carrito`);
 
       const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
-      carrito.push({ nombre, precio });
+      const producto = {
+        nombre: nombre,
+        descripcion: descripcion,
+        imagen: imagen,
+        precio: precio,
+        cantidad: cantidad,
+      };
+
+      // Verificar si el producto ya está en el carrito
+      const productoExistente = carrito.find((item) => item.nombre === nombre);
+      if (productoExistente) {
+        // Si el producto ya existe, aumentar la cantidad
+        productoExistente.cantidad += cantidad;
+      } else {
+        // Si no existe, añadir el nuevo producto
+        carrito.push(producto);
+      }
+
+      // Guardar el carrito actualizado en localStorage
       localStorage.setItem("carrito", JSON.stringify(carrito));
-      // Mostrar un mensaje de éxito
-      console.log(`Añadido al carrito:`, nombre, precio, imagen);
+      console.log("Carrito actualizado:", carrito);
     });
+
+    // Añadir el botón al elemento del instrumento
+    instrumento.appendChild(btnAgregar);
 
     // Agregar el elemento al contenedor correspondiente
     if (nombre.includes("Guitarra")) {
