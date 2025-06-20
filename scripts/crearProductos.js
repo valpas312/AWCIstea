@@ -29,6 +29,16 @@ crearProductoForm.addEventListener("submit", (e) => {
   const imagen = document.getElementById("imagen").value;
   const precio = document.getElementById("precio").value;
 
+  if (descripcion.length < 10) {
+    alert("La descripción debe tener al menos 10 caracteres.");
+    return;
+  }
+
+  if (descripcion.length > 200) {
+    alert("La descripción no puede exceder los 200 caracteres.");
+    return;
+  }
+
   if (nombre && descripcion && imagen && precio) {
     const data = {
       Nombre: nombre,
