@@ -3,11 +3,18 @@ img {
     border-radius: 10px;
     transition: transform 0.3s ease;
 }
+.container{
+    display: flex;
+    flex-direction: column;
+    gap: 3em;
+}
 
 .carrito-container {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
     margin-top: 20px;
+    gap: 3em;
+}
+
+.total{
+    font-weight: bold;
 }

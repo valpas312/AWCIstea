@@ -30,12 +30,12 @@ const getAirtableData = async () => {
       descripcion: record.fields.Descripcion,
       imagen: record.fields.Imagen,
       precio: record.fields.Precio,
+      Id: record.id,
     };
   });
 
-  // Mostrar los datos en la consola
   formattedData.forEach((item) => {
-    const { nombre, descripcion, imagen, precio } = item;
+    const { nombre, descripcion, imagen, precio, Id } = item;
 
     let cantidad = 1; // Cantidad por defecto
 
@@ -51,6 +51,19 @@ const getAirtableData = async () => {
     <p>${descripcion}</p>
     <p class="instrumento-precio">$${precio}</p>
     `;
+
+    // Agregar boton para editar el producto
+    const btnEditar = document.createElement("button");
+    btnEditar.classList.add("btn", "editar");
+    btnEditar.textContent = "Editar";
+
+    // Enviar a pagina de edición (placeholder)
+    btnEditar.addEventListener("click", () => {
+      console.log(`Editar ${nombre}`);
+
+      window.location.href = `editarProducto.html?id=${Id}`;
+
+    });
 
     // Agregar botón de añadir al carrito
     const btnAgregar = document.createElement("button");
@@ -75,9 +88,11 @@ const getAirtableData = async () => {
       if (productoExistente) {
         // Si el producto ya existe, aumentar la cantidad
         productoExistente.cantidad += cantidad;
+        alert(`Se ha añadido ${cantidad} más de ${nombre} al carrito.`);
       } else {
         // Si no existe, añadir el nuevo producto
         carrito.push(producto);
+        alert(`${nombre} ha sido añadido al carrito.`);
       }
 
       // Guardar el carrito actualizado en localStorage
@@ -87,6 +102,7 @@ const getAirtableData = async () => {
 
     // Añadir el botón al elemento del instrumento
     instrumento.appendChild(btnAgregar);
+    instrumento.appendChild(btnEditar);
 
     // Agregar el elemento al contenedor correspondiente
     if (nombre.includes("Guitarra")) {
@@ -102,5 +118,6 @@ const getAirtableData = async () => {
 
   console.log("data", formattedData);
 };
+
 
 getAirtableData();
