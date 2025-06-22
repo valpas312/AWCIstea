@@ -50,6 +50,7 @@ const getAirtableData = async () => {
     <h4>${nombre}</h4>
     <p>${descripcion}</p>
     <p class="instrumento-precio">$${precio}</p>
+    </div>
     `;
 
     // Agregar boton para editar el producto
@@ -62,7 +63,6 @@ const getAirtableData = async () => {
       console.log(`Editar ${nombre}`);
 
       window.location.href = `editarProducto.html?id=${Id}`;
-
     });
 
     // Agregar botón de añadir al carrito
@@ -101,8 +101,15 @@ const getAirtableData = async () => {
     });
 
     // Añadir el botón al elemento del instrumento
-    instrumento.appendChild(btnAgregar);
-    instrumento.appendChild(btnEditar);
+
+    const botones = document.createElement("div");
+    botones.classList.add("botones");
+
+    botones.appendChild(btnAgregar);
+    botones.appendChild(btnEditar);
+
+    const info = instrumento.querySelector(".instrumento-info");
+    info.appendChild(botones);
 
     // Agregar el elemento al contenedor correspondiente
     if (nombre.includes("Guitarra")) {
@@ -117,7 +124,8 @@ const getAirtableData = async () => {
   });
 
   console.log("data", formattedData);
+  localStorage.setItem("productos", JSON.stringify(formattedData));
+  console.log("Productos guardados en localStorage");
 };
-
 
 getAirtableData();

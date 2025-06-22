@@ -20,13 +20,13 @@
 
       <form id="editarProductoForm" >
         <label for="nombre">Nombre del producto:</label>
-        <input type="text" id="nombre" name="nombre" required>
+        <input type="text" id="nombre" name="nombre" required minlength="3" maxlength="50">
 
         <label for="descripcion">Descripcion:</label>
-        <input type="text" id="descripcion" name="descripcion" required>
+        <input type="text" id="descripcion" name="descripcion" required minlength="10" maxlength="200">
 
         <label for="precio">Precio:</label>
-        <input type="number" id="precio" name="precio" required>
+        <input type="number" id="precio" name="precio" required minlength="1" maxlength="10">
 
         <label for="imagen">Link de la imagen:</label>
         <input type="url" id="imagen" name="imagen" required>

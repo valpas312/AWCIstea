@@ -13,8 +13,25 @@ const mostrarCarrito = () => {
   let total = 0;
 
   carrito.forEach((producto, index) => {
-    const { nombre, precio, imagen, cantidad } = producto;
+    const { nombre, precio, imagen, cantidad, id } = producto;
     total += precio * cantidad;
+    
+    // Crear un elemento de lista para cada producto en el carrito
+    // y agregar un botón para eliminar el producto del carrito
+
+    const eliminarBtn = document.createElement("button");
+    eliminarBtn.classList.add("btn", "eliminar");
+
+    eliminarBtn.textContent = "Eliminar";
+    eliminarBtn.addEventListener("click", () => {
+      // Eliminar el producto del carrito por unidad
+      carrito[index].cantidad -= 1;
+      if (carrito[index].cantidad <= 0) {
+        carrito.splice(index, 1); // Eliminar el producto si la cantidad es 0
+      }
+      localStorage.setItem("carrito", JSON.stringify(carrito));
+      mostrarCarrito();
+    });
 
     const item = document.createElement("li");
     item.classList.add("carrito-item");
@@ -24,24 +41,14 @@ const mostrarCarrito = () => {
             <h4>${nombre}</h4>
             <p>$${precio} x ${cantidad}</p>
         </div>
-        <button class="btn eliminar" data-index="${index}">Eliminar</button>
         `;
 
     carritoContainer.appendChild(item);
+    item.appendChild(eliminarBtn);
   });
 
   totalElement.textContent = `Total: $${total.toFixed(2)}`;
 
-  // Agregar evento para eliminar productos del carrito
-  const eliminarBtns = document.querySelectorAll(".eliminar");
-  eliminarBtns.forEach((btn) => {
-    btn.addEventListener("click", (e) => {
-      const index = e.target.dataset.index;
-      carrito.splice(index, 1);
-      localStorage.setItem("carrito", JSON.stringify(carrito));
-      mostrarCarrito();
-    });
-  });
 };
 
 // Función para vaciar el carrito

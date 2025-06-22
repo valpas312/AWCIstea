@@ -10,37 +10,28 @@ const id = new URLSearchParams(window.location.search).get("id");
 
 // Función para llenar el formulario de edición con los datos del producto
 const fillEditForm = async (id) => {
-    try {
-        const response = await fetch(`${API_URL}/${id}`, {
-        method: "GET",
-        headers: {
-            Authorization: `Bearer ${API_TOKEN}`,
-            "Content-Type": "application/json",
-        },
-        });
-    
-        if (!response.ok) {
-        throw new Error("Error al obtener el producto");
-        }
-    
-        const data = await response.json();
-        const product = data.fields;
-    
-        // Llenar el formulario con los datos del producto
-        document.getElementById("nombre").value = product.Nombre || "";
-        document.getElementById("descripcion").value = product.Descripcion || "";
-        document.getElementById("imagen").value = product.Imagen || "";
-        document.getElementById("precio").value = product.Precio || "";
-    
-    } catch (error) {
-        console.error("Error:", error);
-        alert("Error al cargar los datos del producto. Por favor, inténtalo de nuevo.");
+  const productos = localStorage.getItem("productos");
+
+  if (productos) {
+    const productosArray = JSON.parse(productos);
+    const product = productosArray.find((p) => p.Id === id);
+
+    console.log("Producto encontrado:", product);
+
+    if (!product) {
+      throw new Error("Producto no encontrado en el almacenamiento local.");
     }
-}
+    // Llenar el formulario con los datos del producto
+    document.getElementById("nombre").value = product.nombre || "";
+    document.getElementById("descripcion").value = product.descripcion || "";
+    document.getElementById("imagen").value = product.imagen || "";
+    document.getElementById("precio").value = product.precio || "";
+  }
+};
 
 // Llamar a la función para llenar el formulario al cargar la página
 if (id) {
-    fillEditForm(id);
+  fillEditForm(id);
 }
 
 // Funcion para editar un producto en Airtable
@@ -83,6 +74,7 @@ editarProductoForm.addEventListener("submit", (e) => {
   const imagen = document.getElementById("imagen").value;
   const precio = document.getElementById("precio").value;
 
+  //validar el largo de todos los campos
   if (descripcion.length < 10) {
     alert("La descripción debe tener al menos 10 caracteres.");
     return;
@@ -93,12 +85,63 @@ editarProductoForm.addEventListener("submit", (e) => {
     return;
   }
 
+  if (nombre.length < 3) {
+    alert("El nombre debe tener al menos 3 caracteres.");
+    return;
+  
+  
+  } else if (nombre.length > 50) {
+    alert("El nombre no puede exceder los 50 caracteres.");
+    return;
+  }
+
+  if (imagen.length < 5) {
+    alert("La URL de la imagen debe tener al menos 5 caracteres.");
+    return;
+  }
+
+  if (precio <= 0) {
+    alert("El precio debe ser un número positivo.");
+    return;
+  }
+
+  if (precio.length < 1) {
+    alert("El precio no puede estar vacío.");
+    return;
+  }
+
+  if (precio.length > 10) {
+    alert("El precio no puede exceder los 10 caracteres.");
+    return;
+  }
+
+  if (isNaN(precio)) {
+    alert("El precio debe ser un número válido.");
+    return;
+  }
+
+  if (!/^[a-zA-Z0-9\s]+$/.test(nombre)) {
+    alert("El nombre solo puede contener letras, números y espacios.");
+    return;
+  }
+
+  if (!/^[a-zA-Z0-9\s]+$/.test(descripcion)) {
+    alert("La descripción solo puede contener letras, números y espacios.");
+    return;
+  }
+
+  if (!/^[0-9]+(\.[0-9]{1,2})?$/.test(precio)) {
+    alert("El precio debe ser un número válido con hasta dos decimales.");
+    return;
+  }
+
+  // Validar que todos los campos estén completos
   if (nombre && descripcion && imagen && precio) {
     const data = {
-      Nombre: nombre,
-      Descripcion: descripcion,
-      Imagen: imagen,
-      Precio: parseFloat(precio),
+      nombre: nombre,
+      descripcion: descripcion,
+      imagen: imagen,
+      precio: parseFloat(precio),
     };
     console.log("Producto a editar:", data);
     editAirtable(id, data);
