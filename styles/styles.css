@@ -113,7 +113,7 @@ header {
     display: flex;
     flex-direction: column;
     width: 300px;
-    height: 70vh;
+    height: 90vh;
     text-align: center;
     background-color: #fff;
     border-radius: 10px;
@@ -209,6 +209,10 @@ button a{
     margin-top: 20px;
 }
 
+.nav-list-mobile {
+    display: none;
+}
+
 
 /* eliminar el logo en celular y agrandar el nav */
 @media (max-width: 768px) {
@@ -221,11 +225,34 @@ button a{
         align-items: center;
     }
 
-    .nav-list {
-        gap: 10px;
-        padding: 2em;
+    nav{
+        height: 10vh;
     }
-    
+
+    .nav-list {
+        display: none;
+    }
+
+    .nav-list-mobile {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        width: 100%;
+        padding: 1em;
+    }
+
+    .nav-list-mobile a {
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        font-size: 1.2em;
+    }
+
+    .nav-list-mobile img{
+        width: 30px;
+        height: 30px;
+    }
 }
 
 /* Estilos para la pagina de contacto */
