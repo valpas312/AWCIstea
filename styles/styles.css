@@ -113,14 +113,15 @@ header {
     display: flex;
     flex-direction: column;
     width: 300px;
-    height: 90vh;
+    height: auto;
     text-align: center;
     background-color: #fff;
     border-radius: 10px;
     padding: 20px;
+    gap: 3em;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    justify-content: space-between;
+    justify-content: center;
 }
 
 .instrumento-item:hover {

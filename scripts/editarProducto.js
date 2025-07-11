@@ -1,5 +1,5 @@
 const API_TOKEN =
-  "patdhWEghM3DDKm5u.c1127999a716b968324b960a33484eaa29837975bd9d4da2100fb892ba52c731";
+  "patdhWEghM3DDKm5u.b4a67c54da5bc87051e7d7a3468a59b203717aa913ae4463098fda4cbe011faf";
 const BASE_ID = "appW1CUN9IIKZOsrb";
 const TABLE_NAME = "SoundsLikeMusic";
 const API_URL = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}`;
@@ -37,24 +37,23 @@ if (id) {
 // Funcion para editar un producto en Airtable
 const editAirtable = async (id, product) => {
   const itemAirtable = {
-    fields: product,
+    fields: {
+      Nombre: product.nombre,
+      Descripcion: product.descripcion,
+      Imagen: product.imagen,
+      Precio: product.precio,
+    },
   };
 
   fetch(`${API_URL}/${id}`, {
     method: "PATCH",
     headers: {
-      Authorization: `Bearer ${API_TOKEN}`,
+      "Authorization": `Bearer ${API_TOKEN}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify(itemAirtable),
   })
-    .then((response) => {
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw new Error("Error al editar el producto");
-      }
-    })
+    .then((response) => response.json())
     .then((data) => {
       console.log("Producto editado:", data);
       alert("Producto editado correctamente");
@@ -117,21 +116,6 @@ editarProductoForm.addEventListener("submit", (e) => {
 
   if (isNaN(precio)) {
     alert("El precio debe ser un número válido.");
-    return;
-  }
-
-  if (!/^[a-zA-Z0-9\s]+$/.test(nombre)) {
-    alert("El nombre solo puede contener letras, números y espacios.");
-    return;
-  }
-
-  if (!/^[a-zA-Z0-9\s]+$/.test(descripcion)) {
-    alert("La descripción solo puede contener letras, números y espacios.");
-    return;
-  }
-
-  if (!/^[0-9]+(\.[0-9]{1,2})?$/.test(precio)) {
-    alert("El precio debe ser un número válido con hasta dos decimales.");
     return;
   }
 
