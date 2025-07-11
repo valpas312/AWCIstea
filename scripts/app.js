@@ -45,7 +45,7 @@ const getAirtableData = async () => {
 
     // Agregar contenido al elemento
     instrumento.innerHTML = `
-    <button class="btn eliminar" data-id="${Id}">Eliminar</button>
+    <button class="btn eliminar">Eliminar</button>
     <img src="${imagen}" alt="${nombre}" class="instrumento-imagen">
     <div class="instrumento-info">
     <h4>${nombre}</h4>
@@ -53,6 +53,27 @@ const getAirtableData = async () => {
     <p class="instrumento-precio">$${precio}</p>
     </div>
     `;
+    
+    // Agregar evento para eliminar el producto de airtable
+    const btnEliminar = instrumento.querySelector(".eliminar");
+    btnEliminar.addEventListener("click", async () => {
+      console.log(`Eliminar ${nombre}`);
+
+      const deleteResponse = await fetch(`${API_URL}/${Id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${API_TOKEN}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (deleteResponse.ok) {
+        instrumento.remove();
+        alert(`${nombre} ha sido eliminado.`);
+      } else {
+        alert(`Error al eliminar ${nombre}.`);
+      }
+    })
 
     // Agregar boton para editar el producto
     const btnEditar = document.createElement("button");
