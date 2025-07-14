@@ -6,6 +6,29 @@
     list-style: none;
 }
 
+.toast {
+  visibility: hidden;
+  min-width: 200px;
+  background-color: #323232;
+  color: #fff;
+  text-align: center;
+  border-radius: 8px;
+  padding: 12px 24px;
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.5s, visibility 0.5s;
+}
+
+.toast.mostrar {
+  visibility: visible;
+  opacity: 1;
+}
+
+
 body {
     background-color: #f4f4f4;
 }

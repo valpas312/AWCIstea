@@ -49,6 +49,8 @@ crearProductoForm.addEventListener("submit", (e) => {
     console.log("Producto a crear:", data);
     addToAirtable(data);
     alert("Producto creado correctamente");
+    crearProductoForm.reset(); // Limpiar el formulario después de enviar
+    window.location.href = "index.html"; // Redirigir a la página principal
   } else {
     alert("Por favor, completa todos los campos.");
   }

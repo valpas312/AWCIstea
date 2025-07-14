@@ -4,8 +4,12 @@ const BASE_ID = "appW1CUN9IIKZOsrb";
 const TABLE_NAME = "SoundsLikeMusic";
 const API_URL = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}`;
 
-//elementos html
+import { mostrarToast, initToast } from "./toast.js";
 
+// Inicializar el toast
+initToast();
+
+//elementos html
 const guitarras = document.getElementById("guitarras");
 const baterias = document.getElementById("baterias");
 const teclados = document.getElementById("teclados");
@@ -31,11 +35,12 @@ const getAirtableData = async () => {
       imagen: record.fields.Imagen,
       precio: record.fields.Precio,
       Id: record.id,
+      categoria: record.fields.Categoria || "Otros", // Asignar una categoría por defecto si no existe
     };
   });
 
   formattedData.forEach((item) => {
-    const { nombre, descripcion, imagen, precio, Id } = item;
+    const { nombre, descripcion, imagen, precio, Id, categoria } = item;
 
     let cantidad = 1; // Cantidad por defecto
 
@@ -47,13 +52,13 @@ const getAirtableData = async () => {
     instrumento.innerHTML = `
     <button class="btn eliminar">Eliminar</button>
     <img src="${imagen}" alt="${nombre}" class="instrumento-imagen">
-    <div class="instrumento-info">
+    <div class="instrumento-info ${categoria}">
     <h4>${nombre}</h4>
     <p>${descripcion}</p>
     <p class="instrumento-precio">$${precio}</p>
     </div>
     `;
-    
+
     // Agregar evento para eliminar el producto de airtable
     const btnEliminar = instrumento.querySelector(".eliminar");
     btnEliminar.addEventListener("click", async () => {
@@ -70,6 +75,21 @@ const getAirtableData = async () => {
       if (deleteResponse.ok) {
         instrumento.remove();
         alert(`${nombre} ha sido eliminado.`);
+        // Actualizar el localStorage
+        const productos = JSON.parse(localStorage.getItem("productos")) || [];
+        const productosActualizados = productos.filter(
+          (producto) => producto.Id !== Id
+        );
+        localStorage.setItem(
+          "productos",
+          JSON.stringify(productosActualizados)
+        );
+        // Actualizar carrito si es necesario
+        const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+        const carritoActualizado = carrito.filter(
+          (producto) => producto.nombre !== nombre
+        );
+        localStorage.setItem("carrito", JSON.stringify(carritoActualizado));
       } else {
         alert(`Error al eliminar ${nombre}.`);
       }
@@ -134,14 +154,21 @@ const getAirtableData = async () => {
     info.appendChild(botones);
 
     // Agregar el elemento al contenedor correspondiente
-    if (nombre.includes("Guitarra")) {
-      guitarras.appendChild(instrumento);
-    } else if (nombre.includes("Bateria")) {
-      baterias.appendChild(instrumento);
-    } else if (nombre.includes("Teclado")) {
-      teclados.appendChild(instrumento);
-    } else if (nombre.includes("Bajo")) {
-      bajos.appendChild(instrumento);
+    switch (categoria) {
+      case "Guitarra":
+        guitarras.appendChild(instrumento);
+        break;
+      case "Bateria":
+        baterias.appendChild(instrumento);
+        break;
+      case "Teclado":
+        teclados.appendChild(instrumento);
+        break;
+      case "Bajo":
+        bajos.appendChild(instrumento);
+        break;
+      default:
+        console.warn(`Categoría desconocida: ${categoria}.`);
     }
   });
 
