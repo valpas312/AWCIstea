@@ -28,6 +28,7 @@ crearProductoForm.addEventListener("submit", (e) => {
   const descripcion = document.getElementById("descripcion").value;
   const imagen = document.getElementById("imagen").value;
   const precio = document.getElementById("precio").value;
+  const categoria = document.getElementById("categoria").value;
 
   if (descripcion.length < 10) {
     alert("La descripción debe tener al menos 10 caracteres.");
@@ -45,6 +46,7 @@ crearProductoForm.addEventListener("submit", (e) => {
       Descripcion: descripcion,
       Imagen: imagen,
       Precio: parseFloat(precio),
+      Categoria: categoria || "Otros", // Asignar una categoría por defecto si no se selecciona
     };
     console.log("Producto a crear:", data);
     addToAirtable(data);

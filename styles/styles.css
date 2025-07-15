@@ -53,9 +53,11 @@ body {
 .instrumentos{
     display: flex;
     gap: 5em;
-    flex-direction: column;
     align-items: center;
     justify-content: center;
+    flex-wrap: wrap;
+    width: 80vw;
+    margin: 3em 0 3em 0;
 }
 
 header {
@@ -98,45 +100,11 @@ header {
     height: 30px;
 }
 
-.instrumento-container {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-    margin-top: 20px;
-}
-
-.instrumento-list {
-    display: flex;
-    list-style: none;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    gap: 20px;
-}
-
-.instrumento-container li img {
-    border-radius: 10px;
-    transition: transform 0.3s ease;
-    width: 100%;
-}
-
-.instrumento-container li img:hover {
-    transform: scale(1.05);
-}
-.instrumento-container li {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-}
 
 .instrumento-item{
     display: flex;
     flex-direction: column;
     width: 300px;
-    height: auto;
     text-align: center;
     background-color: #fff;
     border-radius: 10px;
@@ -156,11 +124,6 @@ header {
     display: flex;
     flex-direction: column;
     gap: .5em;
-}
-
-#teclados ul li div img{
-    width: 100%;
-    height: auto;
 }
 
 .btn{

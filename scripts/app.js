@@ -10,10 +10,7 @@ import { mostrarToast, initToast } from "./toast.js";
 initToast();
 
 //elementos html
-const guitarras = document.getElementById("guitarras");
-const baterias = document.getElementById("baterias");
-const teclados = document.getElementById("teclados");
-const bajos = document.getElementById("bajos");
+const instrumentos = document.querySelector(".instrumentos");
 
 // Función para obtener los datos de Airtable
 // y mostrarlos en la página
@@ -56,7 +53,6 @@ const getAirtableData = async () => {
     <h4>${nombre}</h4>
     <p>${descripcion}</p>
     <p class="instrumento-precio">$${precio}</p>
-    </div>
     `;
 
     // Agregar evento para eliminar el producto de airtable
@@ -74,7 +70,7 @@ const getAirtableData = async () => {
 
       if (deleteResponse.ok) {
         instrumento.remove();
-        alert(`${nombre} ha sido eliminado.`);
+        mostrarToast(`Se eliminó: ${nombre}`);
         // Actualizar el localStorage
         const productos = JSON.parse(localStorage.getItem("productos")) || [];
         const productosActualizados = productos.filter(
@@ -93,7 +89,7 @@ const getAirtableData = async () => {
       } else {
         alert(`Error al eliminar ${nombre}.`);
       }
-    })
+    });
 
     // Agregar boton para editar el producto
     const btnEditar = document.createElement("button");
@@ -130,11 +126,13 @@ const getAirtableData = async () => {
       if (productoExistente) {
         // Si el producto ya existe, aumentar la cantidad
         productoExistente.cantidad += cantidad;
-        alert(`Se ha añadido ${cantidad} más de ${nombre} al carrito.`);
+        mostrarToast(
+          `Tienes ${productoExistente.cantidad} ${nombre} en el carrito.`
+        );
       } else {
         // Si no existe, añadir el nuevo producto
         carrito.push(producto);
-        alert(`${nombre} ha sido añadido al carrito.`);
+        mostrarToast(`${nombre} ha sido añadido al carrito.`);
       }
 
       // Guardar el carrito actualizado en localStorage
@@ -153,28 +151,12 @@ const getAirtableData = async () => {
     const info = instrumento.querySelector(".instrumento-info");
     info.appendChild(botones);
 
-    // Agregar el elemento al contenedor correspondiente
-    switch (categoria) {
-      case "Guitarra":
-        guitarras.appendChild(instrumento);
-        break;
-      case "Bateria":
-        baterias.appendChild(instrumento);
-        break;
-      case "Teclado":
-        teclados.appendChild(instrumento);
-        break;
-      case "Bajo":
-        bajos.appendChild(instrumento);
-        break;
-      default:
-        console.warn(`Categoría desconocida: ${categoria}.`);
-    }
+    // Añadir el elemento del instrumento a la lista de instrumentos
+    instrumentos.appendChild(instrumento);
   });
 
   console.log("data", formattedData);
   localStorage.setItem("productos", JSON.stringify(formattedData));
-  console.log("Productos guardados en localStorage");
 };
 
 getAirtableData();

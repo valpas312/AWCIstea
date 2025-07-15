@@ -8,9 +8,15 @@ const editarProductoForm = document.getElementById("editarProductoForm");
 
 const id = new URLSearchParams(window.location.search).get("id");
 
+import { mostrarToast, initToast } from "./toast.js";
+
+// Inicializar el toast
+initToast();
+
 // Función para llenar el formulario de edición con los datos del producto
+const productos = localStorage.getItem("productos");
+
 const fillEditForm = async (id) => {
-  const productos = localStorage.getItem("productos");
 
   if (productos) {
     const productosArray = JSON.parse(productos);
@@ -26,6 +32,7 @@ const fillEditForm = async (id) => {
     document.getElementById("descripcion").value = product.descripcion || "";
     document.getElementById("imagen").value = product.imagen || "";
     document.getElementById("precio").value = product.precio || "";
+    document.getElementById("categoria").value = product.categoria || "Otros";
   }
 };
 
@@ -42,6 +49,7 @@ const editAirtable = async (id, product) => {
       Descripcion: product.descripcion,
       Imagen: product.imagen,
       Precio: product.precio,
+      Categoria: product.categoria || "Otros", 
     },
   };
 
@@ -56,8 +64,31 @@ const editAirtable = async (id, product) => {
     .then((response) => response.json())
     .then((data) => {
       console.log("Producto editado:", data);
-      alert("Producto editado correctamente");
+      mostrarToast("Producto editado correctamente", "success");
       window.location.href = "index.html"; // Redirigir a la página principal
+
+      // Actualizar el localStorage
+      const productos = JSON.parse(localStorage.getItem("productos")) || [];
+      const index = productos.findIndex((p) => p.Id === id);
+      if (index !== -1) {
+        productos[index] = {
+          ...productos[index],
+          ...product,
+        };
+        localStorage.setItem("productos", JSON.stringify(productos));
+      }
+
+      // Actualizar el carrito si es necesario
+      const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+      const carritoIndex = carrito.findIndex((p) => p.nombre === product.nombre);
+      if (carritoIndex !== -1) {
+        carrito[carritoIndex] = {
+          ...carrito[carritoIndex],
+          ...product,
+        };
+        localStorage.setItem("carrito", JSON.stringify(carrito));
+      }
+
     })
     .catch((error) => {
       console.error("Error:", error);
@@ -72,6 +103,7 @@ editarProductoForm.addEventListener("submit", (e) => {
   const descripcion = document.getElementById("descripcion").value;
   const imagen = document.getElementById("imagen").value;
   const precio = document.getElementById("precio").value;
+  const categoria = document.getElementById("categoria").value;
 
   //validar el largo de todos los campos
   if (descripcion.length < 10) {
@@ -126,6 +158,7 @@ editarProductoForm.addEventListener("submit", (e) => {
       descripcion: descripcion,
       imagen: imagen,
       precio: parseFloat(precio),
+      categoria: categoria || "Otros",
     };
     console.log("Producto a editar:", data);
     editAirtable(id, data);
