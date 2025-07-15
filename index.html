@@ -8,46 +8,79 @@
     <link rel="shortcut icon" href="assets/logo.png" />
   </head>
   <body>
-      <header class="header">
-        <img src="assets/logo.png" alt="Logo" class="logo" />
-        <nav>
-          <ul class="nav-list">
-            <li class="nav-item crearProductosBtn"><a href="crearProductos.html">Crear productos</a></li>
-            <li class="nav-item"><a href="carrito.html"><img src="./assets/cart-shopping-svgrepo-com.svg" alt="Carrito"/></a></li>
-          </ul>
-          <ul class="nav-list-mobile">
-            <li class="nav-item crearProductosBtn"><a href="crearProductos.html">Crear productos</a></li>
-            <li class="nav-item"><a href="carrito.html"><img src="./assets/cart-shopping-svgrepo-com.svg" alt="Carrito"/></a></li>
-          </ul>
-        </nav>
-      </header>
+    <header class="header">
+      <img src="assets/logo.png" alt="Logo" class="logo" />
+      <nav>
+        <ul class="nav-list">
+          <li class="nav-item crearProductosBtn">
+            <a href="crearProductos.html">Crear productos</a>
+          </li>
+          <li class="nav-item">
+            <a href="carrito.html"
+              ><img src="./assets/cart-shopping-svgrepo-com.svg" alt="Carrito"
+            /></a>
+          </li>
+        </ul>
+        <ul class="nav-list-mobile">
+          <li class="nav-item crearProductosBtn">
+            <a href="crearProductos.html">Crear productos</a>
+          </li>
+          <li class="nav-item">
+            <a href="carrito.html"
+              ><img src="./assets/cart-shopping-svgrepo-com.svg" alt="Carrito"
+            /></a>
+          </li>
+        </ul>
+      </nav>
+    </header>
 
-      <div class="container">
-        <h2>Bienvenido a Sounds like music</h2>
-        <p>
-          Descubrí una amplia selección de instrumentos musicales para todos los niveles y estilos: guitarras, teclados, baterías, audio profesional y más.<br><br>
-      Tanto si estás dando tus primeros pasos como si sos un músico experimentado, tenemos lo que necesitás para sonar mejor que nunca.<br><br>
-      Envíos a todo el país, asesoramiento personalizado y cuotas sin interés.<br><br>
-      ¡Tu próxima melodía empieza acá!
-        </p>
+    <div class="container">
+      <h2>Bienvenido a Sounds like music</h2>
+      <p>
+        Descubrí una amplia selección de instrumentos musicales para todos los
+        niveles y estilos: guitarras, teclados, baterías, audio profesional y
+        más.<br /><br />
+        Tanto si estás dando tus primeros pasos como si sos un músico
+        experimentado, tenemos lo que necesitás para sonar mejor que nunca.<br /><br />
+        Envíos a todo el país, asesoramiento personalizado y cuotas sin
+        interés.<br /><br />
+        ¡Tu próxima melodía empieza acá!
+      </p>
 
-        <div class="instrumentos">
-          <!-- Renderizado con js -->
-        </div>
-        <button class="btn btn-contacto">
-          <a href="contacto.html">Contacto</a>
-        </button>
+      <div class="filtros">
+        <select id="filtro-categoria">
+          <option value="todos">Todas las categorías</option>
+          <option value="guitarras">Guitarra</option>
+          <option value="baterías">Baterías</option>
+          <option value="teclados">Teclados</option>
+          <option value="bajos">Bajos</option>
+        </select>
+
+        <select id="filtro-orden">
+          <option value="none">Ordenar por...</option>
+          <option value="precio-asc">Precio: Menor a mayor</option>
+          <option value="precio-desc">Precio: Mayor a menor</option>
+          <option value="alfabetico">A-Z</option>
+        </select>
       </div>
-      <footer>
-        <div class="footer-content">
-          <p>&copy; 2025 Sounds Like Music. Todos los derechos reservados.</p>
-          <ul class="social-media">
-            <li><a href="">Facebook</a></li>
-            <li><a href="">Twitter</a></li>
-            <li><a href="">Instagram</a></li>
-          </ul>
-        </div>
-      </footer>
+
+      <div class="instrumentos">
+        <!-- Renderizado con js -->
+      </div>
+      <button class="btn btn-contacto">
+        <a href="contacto.html">Contacto</a>
+      </button>
+    </div>
+    <footer>
+      <div class="footer-content">
+        <p>&copy; 2025 Sounds Like Music. Todos los derechos reservados.</p>
+        <ul class="social-media">
+          <li><a href="">Facebook</a></li>
+          <li><a href="">Twitter</a></li>
+          <li><a href="">Instagram</a></li>
+        </ul>
+      </div>
+    </footer>
   </body>
-  <script type="module" src="./scripts/app.js"></script>
+  <script type="module" defer src="./scripts/app.js"></script>
 </html>

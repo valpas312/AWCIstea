@@ -1,5 +1,4 @@
-const API_TOKEN =
-  "patdhWEghM3DDKm5u.b4a67c54da5bc87051e7d7a3468a59b203717aa913ae4463098fda4cbe011faf";
+const API_TOKEN = "patdhWEghM3DDKm5u.b4a67c54da5bc87051e7d7a3468a59b203717aa913ae4463098fda4cbe011faf";
 const BASE_ID = "appW1CUN9IIKZOsrb";
 const TABLE_NAME = "SoundsLikeMusic";
 const API_URL = `https://api.airtable.com/v0/${BASE_ID}/${TABLE_NAME}`;
@@ -9,57 +8,44 @@ import { mostrarToast, initToast } from "./toast.js";
 // Inicializar el toast
 initToast();
 
-//elementos html
-const instrumentos = document.querySelector(".instrumentos");
+// --- ELEMENTOS DEL DOM ---
+const instrumentosContainer = document.querySelector(".instrumentos");
+const filtroCategoria = document.getElementById("filtro-categoria");
+const filtroOrden = document.getElementById("filtro-orden");
 
-// Función para obtener los datos de Airtable
-// y mostrarlos en la página
+// Almacenará todos los productos obtenidos de la API
+let allProducts = [];
 
-const getAirtableData = async () => {
-  const response = await fetch(API_URL, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${API_TOKEN}`,
-      "Content-Type": "application/json",
-    },
-  });
-  const data = await response.json();
+// --- FUNCIÓN PARA RENDERIZAR PRODUCTOS ---
+// Recibe un array de productos y los muestra en el DOM
+const renderProducts = (productsToRender) => {
+  instrumentosContainer.innerHTML = ""; // Limpiar la lista actual
 
-  const formattedData = data.records.map((record) => {
-    return {
-      nombre: record.fields.Nombre,
-      descripcion: record.fields.Descripcion,
-      imagen: record.fields.Imagen,
-      precio: record.fields.Precio,
-      Id: record.id,
-      categoria: record.fields.Categoria || "Otros", // Asignar una categoría por defecto si no existe
-    };
-  });
+  if (productsToRender.length === 0) {
+    instrumentosContainer.innerHTML = "<p>No se encontraron productos con estos filtros.</p>";
+    return;
+  }
 
-  formattedData.forEach((item) => {
+  productsToRender.forEach((item) => {
     const { nombre, descripcion, imagen, precio, Id, categoria } = item;
+    let cantidad = 1;
 
-    let cantidad = 1; // Cantidad por defecto
-
-    // Crear un elemento para cada producto
     const instrumento = document.createElement("li");
     instrumento.classList.add("instrumento-item");
-
-    // Agregar contenido al elemento
     instrumento.innerHTML = `
-    <button class="btn eliminar">Eliminar</button>
-    <img src="${imagen}" alt="${nombre}" class="instrumento-imagen">
-    <div class="instrumento-info ${categoria}">
-    <h4>${nombre}</h4>
-    <p>${descripcion}</p>
-    <p class="instrumento-precio">$${precio}</p>
-    `;
+      <button class="btn eliminar">Eliminar</button>
+      <img src="${imagen}" alt="${nombre}" class="instrumento-imagen">
+      <div class="instrumento-info ${categoria}">
+        <h4>${nombre}</h4>
+        <p>${descripcion}</p>
+        <p class="instrumento-precio">$${precio}</p>
+      </div>`;
 
-    // Agregar evento para eliminar el producto de airtable
+    // --- Lógica de botones (Editar, Eliminar, Añadir al carrito) ---
+    // (Se mantiene tu lógica original para cada botón)
     const btnEliminar = instrumento.querySelector(".eliminar");
     btnEliminar.addEventListener("click", async () => {
       console.log(`Eliminar ${nombre}`);
-
       const deleteResponse = await fetch(`${API_URL}/${Id}`, {
         method: "DELETE",
         headers: {
@@ -69,94 +55,122 @@ const getAirtableData = async () => {
       });
 
       if (deleteResponse.ok) {
-        instrumento.remove();
         mostrarToast(`Se eliminó: ${nombre}`);
-        // Actualizar el localStorage
-        const productos = JSON.parse(localStorage.getItem("productos")) || [];
-        const productosActualizados = productos.filter(
-          (producto) => producto.Id !== Id
-        );
-        localStorage.setItem(
-          "productos",
-          JSON.stringify(productosActualizados)
-        );
-        // Actualizar carrito si es necesario
-        const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
-        const carritoActualizado = carrito.filter(
-          (producto) => producto.nombre !== nombre
-        );
-        localStorage.setItem("carrito", JSON.stringify(carritoActualizado));
+        getAirtableData(); 
       } else {
         alert(`Error al eliminar ${nombre}.`);
       }
     });
 
-    // Agregar boton para editar el producto
     const btnEditar = document.createElement("button");
     btnEditar.classList.add("btn", "editar");
     btnEditar.textContent = "Editar";
-
-    // Enviar a pagina de edición (placeholder)
     btnEditar.addEventListener("click", () => {
-      console.log(`Editar ${nombre}`);
-
       window.location.href = `editarProducto.html?id=${Id}`;
     });
 
-    // Agregar botón de añadir al carrito
     const btnAgregar = document.createElement("button");
     btnAgregar.classList.add("btn", "agregar");
     btnAgregar.textContent = "Añadir al carrito";
-
-    // Evento para añadir al carrito
     btnAgregar.addEventListener("click", () => {
-      console.log(`Añadir ${cantidad} ${nombre} al carrito`);
-
       const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
-      const producto = {
-        nombre: nombre,
-        descripcion: descripcion,
-        imagen: imagen,
-        precio: precio,
-        cantidad: cantidad,
-      };
+      const productoExistente = carrito.find((p) => p.nombre === nombre);
 
-      // Verificar si el producto ya está en el carrito
-      const productoExistente = carrito.find((item) => item.nombre === nombre);
       if (productoExistente) {
-        // Si el producto ya existe, aumentar la cantidad
         productoExistente.cantidad += cantidad;
-        mostrarToast(
-          `Tienes ${productoExistente.cantidad} ${nombre} en el carrito.`
-        );
+        mostrarToast(`Tienes ${productoExistente.cantidad} ${nombre} en el carrito.`);
       } else {
-        // Si no existe, añadir el nuevo producto
+        const producto = { nombre, descripcion, imagen, precio, cantidad };
         carrito.push(producto);
         mostrarToast(`${nombre} ha sido añadido al carrito.`);
       }
-
-      // Guardar el carrito actualizado en localStorage
       localStorage.setItem("carrito", JSON.stringify(carrito));
-      console.log("Carrito actualizado:", carrito);
     });
-
-    // Añadir el botón al elemento del instrumento
-
+    
     const botones = document.createElement("div");
     botones.classList.add("botones");
-
     botones.appendChild(btnAgregar);
     botones.appendChild(btnEditar);
 
     const info = instrumento.querySelector(".instrumento-info");
     info.appendChild(botones);
 
-    // Añadir el elemento del instrumento a la lista de instrumentos
-    instrumentos.appendChild(instrumento);
+    instrumentosContainer.appendChild(instrumento);
   });
-
-  console.log("data", formattedData);
-  localStorage.setItem("productos", JSON.stringify(formattedData));
 };
 
+// --- FUNCIÓN PARA APLICAR FILTROS Y ORDENAMIENTO ---
+const applyFiltersAndSort = () => {
+  let filteredProducts = [...allProducts];
+
+  // 1. Filtrar por categoría
+  const categoriaSeleccionada = filtroCategoria.value;
+  if (categoriaSeleccionada !== "todos") { // Se usa "todos" según tu nuevo HTML
+    filteredProducts = filteredProducts.filter(
+      (producto) => producto.categoria === categoriaSeleccionada
+    );
+  }
+
+  // 2. Ordenar
+  const ordenSeleccionado = filtroOrden.value;
+  switch (ordenSeleccionado) {
+    case "precio-asc":
+      filteredProducts.sort((a, b) => a.precio - b.precio);
+      break;
+    case "precio-desc":
+      filteredProducts.sort((a, b) => b.precio - a.precio);
+      break;
+    case "alfabetico": // Se usa "alfabetico" según tu nuevo HTML
+      filteredProducts.sort((a, b) => a.nombre.localeCompare(b.nombre));
+      break;
+    // 'none' no necesita acción, mantiene el orden de la API
+  }
+
+  // 3. Renderizar el resultado
+  renderProducts(filteredProducts);
+};
+
+
+// --- FUNCIÓN PRINCIPAL PARA OBTENER DATOS DE AIRTABLE ---
+const getAirtableData = async () => {
+  try {
+    const response = await fetch(API_URL, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${API_TOKEN}`,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+        throw new Error(`Error en la petición: ${response.statusText}`);
+    }
+
+    const data = await response.json();
+
+    allProducts = data.records.map((record) => ({
+      Id: record.id,
+      nombre: record.fields.Nombre,
+      descripcion: record.fields.Descripcion,
+      imagen: record.fields.Imagen,
+      precio: record.fields.Precio,
+      categoria: record.fields.Categoria,
+    }));
+
+    localStorage.setItem("productos", JSON.stringify(allProducts));
+    
+    // Aplicar filtros (que al inicio mostrará todos los productos)
+    applyFiltersAndSort();
+
+  } catch (error) {
+    console.error("No se pudieron cargar los productos:", error);
+    instrumentosContainer.innerHTML = "<p>Error al cargar los productos. Inténtalo de nuevo más tarde.</p>";
+  }
+};
+
+// --- EVENT LISTENERS PARA LOS FILTROS ---
+filtroCategoria.addEventListener("change", applyFiltersAndSort);
+filtroOrden.addEventListener("change", applyFiltersAndSort);
+
+// --- INICIAR LA CARGA DE DATOS AL CARGAR LA PÁGINA ---
 getAirtableData();
