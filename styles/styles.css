@@ -136,10 +136,11 @@ header {
     gap: .5em;
 }
 
+
 .btn{
     background-color: #D1401B;
     color: white;
-    padding: 10px 20px;
+    padding: .3em;
     border: none;
     border-radius: 5px;
     cursor: pointer;
